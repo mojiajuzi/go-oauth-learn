@@ -1,0 +1,61 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "dGviOUA59aqL2DdPQHBYyREShsw=",
+			"path": "github.com/RangelReale/osin",
+			"revision": "2dc1b43167692cdc89446b99b98fa9de6bff020f",
+			"revisionTime": "2018-02-02T15:01:37Z"
+		},
+		{
+			"checksumSHA1": "QOKeoyMn+R/VSgSiHfjTPq3uWHg=",
+			"path": "github.com/RangelReale/osin/example",
+			"revision": "2dc1b43167692cdc89446b99b98fa9de6bff020f",
+			"revisionTime": "2018-02-02T15:01:37Z"
+		},
+		{
+			"checksumSHA1": "qxpiIl/oscKj8lnEAui6DfPg9SA=",
+			"path": "github.com/ansel1/merry",
+			"revision": "c8d518a00eb65f58411f49c1c84ee99c02b699f5",
+			"revisionTime": "2017-12-28T21:48:37Z"
+		},
+		{
+			"checksumSHA1": "5Sf4uQhL/+fIcyIdbeteLJct8v0=",
+			"path": "github.com/felipeweb/gopher-utils",
+			"revision": "05a00fc86ef51b7b351fb05a0e13307c85dbe115",
+			"revisionTime": "2016-11-01T03:30:30Z"
+		},
+		{
+			"checksumSHA1": "XhW3vvec/pIkvUxN/isWQvu0r7E=",
+			"path": "github.com/felipeweb/osin-mysql",
+			"revision": "269603eb06cfa0a1e839d3c9c59ddab39cf6fb9e",
+			"revisionTime": "2017-06-20T11:38:54Z"
+		},
+		{
+			"checksumSHA1": "ZbU8qGzETzJZ2t30LmHxla5PLMY=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "bc14601d1bd56421dd60f561e6052c9ed77f9daf",
+			"revisionTime": "2018-01-25T05:47:45Z"
+		},
+		{
+			"checksumSHA1": "As1PSFJop3xi3W8tAYSm/8YesAQ=",
+			"path": "github.com/pborman/uuid",
+			"revision": "c65b2f87fee37d1c7854c9164a450713c28d50cd",
+			"revisionTime": "2018-01-22T19:00:07Z"
+		},
+		{
+			"checksumSHA1": "oCH3J96RWvO8W4xjix47PModpio=",
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "432090b8f568c018896cd8a0fb0345872bbac6ce",
+			"revisionTime": "2018-02-08T00:33:17Z"
+		},
+		{
+			"checksumSHA1": "oVPHWesOmZ02vLq2fglGvf+AMgk=",
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "432090b8f568c018896cd8a0fb0345872bbac6ce",
+			"revisionTime": "2018-02-08T00:33:17Z"
+		}
+	],
+	"rootPath": "gotemp/hpoauth"
+}
