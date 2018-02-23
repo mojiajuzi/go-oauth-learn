@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -137,13 +138,33 @@ func main() {
 	http.HandleFunc("/client/create", func(w http.ResponseWriter, r *http.Request) {
 		var client = new(osin.DefaultClient)
 		r.ParseForm()
-		client.Id = "100001"
-		ha, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+
+		//获取跳转地址
+		client.RedirectUri = r.FormValue("redirect_uri")
+
+		var maxID string
+		//生成clientID,先查询数据库中最大的id
+		row := dbConnect.QueryRow("select id from osin_client order by id desc limit 1")
+		err := row.Scan(&maxID)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		if maxID != "" {
+			maxID, err := strconv.Atoi(maxID)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			client.Id = strconv.Itoa(maxID + 1)
+		} else {
+			client.Id = "100001"
+		}
+		password := r.FormValue("password")
+		fmt.Println(password)
+		ha, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			return
 		}
 		client.Secret = string(ha)
-		client.RedirectUri = "https://blog.tsecloud.club/"
 		store := mysql.New(dbConnect, "osin_")
 		err = store.CreateClient(client)
 		if err != nil {
@@ -162,6 +183,6 @@ func main() {
 	http.HandleFunc("/client/delete", func(w http.ResponseWriter, r *http.Request) {
 
 	})
-
+	fmt.Println("server is runing")
 	http.ListenAndServe(":14000", nil)
 }
