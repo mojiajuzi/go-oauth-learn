@@ -147,19 +147,20 @@ func main() {
 		row := dbConnect.QueryRow("select id from osin_client order by id desc limit 1")
 		err := row.Scan(&maxID)
 		if err != nil {
-			fmt.Println(err.Error())
+			w.Write([]byte(err.Error()))
+			return
 		}
 		if maxID != "" {
 			maxID, err := strconv.Atoi(maxID)
 			if err != nil {
-				fmt.Println(err.Error())
+				w.Write([]byte(err.Error()))
+				return
 			}
 			client.Id = strconv.Itoa(maxID + 1)
 		} else {
 			client.Id = "100001"
 		}
 		password := r.FormValue("password")
-		fmt.Println(password)
 		ha, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			return
@@ -168,9 +169,9 @@ func main() {
 		store := mysql.New(dbConnect, "osin_")
 		err = store.CreateClient(client)
 		if err != nil {
-			fmt.Println(err.Error())
+			w.Write([]byte(err.Error()))
 		} else {
-			fmt.Println("Success")
+			w.Write([]byte("success"))
 		}
 	})
 
