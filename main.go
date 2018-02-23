@@ -163,6 +163,7 @@ func main() {
 		password := r.FormValue("password")
 		ha, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
+			w.Write([]byte(err.Error()))
 			return
 		}
 		client.Secret = string(ha)
@@ -170,19 +171,77 @@ func main() {
 		err = store.CreateClient(client)
 		if err != nil {
 			w.Write([]byte(err.Error()))
-		} else {
-			w.Write([]byte("success"))
+			return
 		}
+		w.Write([]byte("success"))
 	})
 
 	//更新一个客户端
 	http.HandleFunc("/client/update", func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
+		id := r.FormValue("id")
+		password := r.FormValue("new_password")
+		oldPassword := r.FormValue("old_password")
+		redirectURI := r.FormValue("redirect_uri")
+		var client = new(osin.DefaultClient)
+
+		//获取旧记录
+		row := dbConnect.QueryRow("select id, secret, redirect_uri from osin_client where id=?", id)
+		err := row.Scan(&client.Id, &client.Secret, &client.RedirectUri)
+		if err != nil {
+			w.WriteHeader(505)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		// 校验旧密码是否一直
+		err = bcrypt.CompareHashAndPassword([]byte(client.Secret), []byte(oldPassword))
+		if err != nil {
+			w.WriteHeader(505)
+			w.Write([]byte("password error"))
+			return
+		}
+
+		//生成新的密码
+		hs, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("password encrypt error"))
+			return
+		}
+		client.Secret = string(hs)
+
+		if redirectURI != "" {
+			client.RedirectUri = redirectURI
+		}
+
+		err = store.UpdateClient(client)
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("update client error"))
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("success"))
 
 	})
 
 	//删除一个客户端
 	http.HandleFunc("/client/delete", func(w http.ResponseWriter, r *http.Request) {
-
+		r.ParseForm()
+		id := r.FormValue("id")
+		if id == "" {
+			w.Write([]byte("not found the params id"))
+			return
+		}
+		err = store.RemoveClient(id)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("client delete success"))
 	})
 	fmt.Println("server is runing")
 	http.ListenAndServe(":14000", nil)
